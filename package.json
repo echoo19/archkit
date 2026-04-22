@@ -1,0 +1,8 @@
+{
+  "name": "archkit",
+  "version": "1.0.0",
+  "description": "Repository optimization layer for coding agents — route tasks, detect dead/duplicate/misplaced files, and maintain structure so agents work faster and more accurately",
+  "type": "module",
+  "keywords": ["claude-code", "coding-agents", "repository", "architecture", "optimization"],
+  "license": "MIT"
+}

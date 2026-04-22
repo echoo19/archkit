@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# ArchKit SessionStart hook
+# Injects repo architecture context into every agent session.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+CWD="${PWD}"
+
+CONTEXT_FILE="${CWD}/.archkit/agent-context.md"
+USING_SKILL="${PLUGIN_ROOT}/skills/using-archkit/SKILL.md"
+
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+using_archkit_content=$(cat "${USING_SKILL}" 2>/dev/null || echo "")
+using_archkit_escaped=$(escape_for_json "$using_archkit_content")
+
+if [ -f "${CONTEXT_FILE}" ]; then
+    repo_context=$(cat "${CONTEXT_FILE}" 2>/dev/null || echo "")
+    repo_context_escaped=$(escape_for_json "$repo_context")
+    session_context="<ARCHKIT>\nThis repository has ArchKit installed.\n\n**Repo Architecture Context:**\n${repo_context_escaped}\n\n**How to use ArchKit skills:**\n${using_archkit_escaped}\n</ARCHKIT>"
+else
+    session_context="<ARCHKIT>\nArchKit is installed. This repository has not been initialized yet.\n\nIf you are working in a code repository, consider invoking the archkit:init skill or the /archkit-init command to generate .archkit/ optimization artifacts. This only needs to happen once per repository.\n\n**How to use ArchKit skills:**\n${using_archkit_escaped}\n</ARCHKIT>"
+fi
+
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+    printf '{\n  "additional_context": "%s"\n}\n' "$session_context"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+    printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context"
+else
+    printf '{\n  "additionalContext": "%s"\n}\n' "$session_context"
+fi
+
+exit 0

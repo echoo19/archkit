@@ -1,0 +1,6 @@
+{
+  "name": "archkit",
+  "description": "Repository optimization layer: route tasks to files, detect dead/duplicate/misplaced code, and maintain structure so coding agents navigate faster and edit more accurately",
+  "version": "1.0.0",
+  "contextFileName": "GEMINI.md"
+}
