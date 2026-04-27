@@ -6,4 +6,4 @@ Invoke the `archkit:route` skill to find the right starting files for the curren
 
 Pass the task description as context. For example: `/archkit-route add password reset endpoint` or just `/archkit-route` to route based on the current conversation context.
 
-Outputs PRIMARY paths (start here), SECONDARY paths (expand if needed), AVOID paths (deprioritized, not forbidden), a new-code placement suggestion, and a confidence level.
+Outputs PRIMARY paths (start here), SECONDARY paths (expand if needed), AVOID paths (deprioritized, not forbidden), a new-code placement suggestion, and a confidence level. Route output is navigation guidance only; tests, docs, imports, user instructions, and existing behavior take precedence.

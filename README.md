@@ -27,18 +27,20 @@ These aren't hallucination problems. They're navigation problems. The agent is d
 
 ArchKit is a plugin for coding agents (Claude Code, Gemini CLI, Cursor, Codex, Copilot CLI). Install it once and it runs passively.
 
+ArchKit is **agent navigation metadata**, not a product authority. It can suggest where agents should look, where new code usually belongs, and which files deserve structural review. It must not override user instructions, repository docs, tests, public APIs, runtime behavior, data schemas, dependency choices, configuration semantics, or other product decisions.
+
 On first use, it scans your repository and generates a `.archkit/` directory containing:
 
 - A **zone map** describing what each part of the repo is for
-- **Placement rules** specifying where new code belongs
+- **Placement rules** suggesting where new code usually belongs
 - An **agent-context file** injected into every session via a hook
 - A **subagent briefing template** for dispatching focused subagents
 
-From that point on, every agent session starts with your repo's architecture already loaded into context. The agent knows where the API layer is, where the service layer is, where tests live, where not to look first, and where to put new code.
+From that point on, every agent session starts with repo navigation context already loaded. The agent gets hints about where the API layer is, where the service layer is, where tests live, where not to look first, and where new code is usually placed.
 
-When you ask it to work on something, it routes to the right files immediately — no exploration overhead, no wrong-file edits.
+When you ask it to work on something, it routes to likely starting files immediately. Agents still follow imports, tests, docs, and existing contracts wherever they lead.
 
-ArchKit also provides **audit, fix, and prune** skills that detect and repair structural problems on demand. Fixes require confirmation. Pruning moves files to `.archkit/archive/` and never deletes anything.
+ArchKit also provides **audit, fix, and prune** skills that detect and repair structural problems on demand. These skills may touch software files only when the action is behavior-preserving and mechanically safe. Fixes require confirmation, complete reference coverage, and post-change verification. Pruning moves only low-risk, high-confidence dead files to `.archkit/archive/` and never deletes anything.
 
 ---
 
@@ -218,10 +220,10 @@ Regenerates `agent-context.md` so the next session reflects the current structur
 
 | File | Purpose |
 |------|---------|
-| `canon.json` | Full architecture contract: zones, rules, conventions |
+| `canon.json` | Architecture guidance: zones, rules, conventions |
 | `zones.json` | Compact zone list for fast routing |
 | `map.json` | File inventory with zone assignments |
-| `placement-rules.json` | Where new code should go per pattern |
+| `placement-rules.json` | Suggested locations for new code per pattern |
 | `avoid.json` | Deprioritized paths with reasons |
 | `report.json` | Latest audit results |
 | `routes.json` | Recent routing result cache |
@@ -238,9 +240,13 @@ Commit `.archkit/` to version control (except `archive/` if you prefer to keep i
 
 **Prioritization, not restriction.** ArchKit tells agents where to start, not where they must stay. Every route result includes PRIMARY paths, SECONDARY paths, and an explicit expansion instruction. Agents always follow dependencies wherever they lead.
 
+**Behavior-preserving only.** ArchKit may move or archive software files only to improve agent navigation, structure, or maintainability, and only when the action is highly likely not to change functionality. It must never intentionally change runtime behavior, public contracts, schemas, dependency versions, build outputs, or configuration meaning.
+
+**Evidence over authority.** Audit findings, placement rules, and route results are candidates and hints. If tests, imports, documentation, or user instructions conflict with ArchKit, those sources win.
+
 **Passive by default.** The session hook injects repo context into every conversation automatically. You don't change your workflow.
 
-**Safe by default.** `archkit:fix` and `archkit:prune` always dry-run first. Pruning archives to `.archkit/archive/` and never deletes. Fix only moves files where all import references are resolvable.
+**Safe by default.** `archkit:fix` and `archkit:prune` always dry-run first. Pruning archives to `.archkit/archive/` and never deletes. Fix only moves files where all import references are resolvable, dynamic references are not a blocker, and verification can confirm behavior-preserving edits.
 
 **Zero dependencies.** Pure markdown and bash. No npm install, no build step, no external services. Works offline.
 

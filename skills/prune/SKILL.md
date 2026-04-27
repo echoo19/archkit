@@ -9,6 +9,8 @@ Archive dead, unused, and redundant files by moving them to `.archkit/archive/`.
 
 **Core principle:** Archiving is reversible. Deletion is not. ArchKit never deletes files. Everything goes to `.archkit/archive/` with its original path preserved.
 
+**Authority boundary:** Prune may touch software files only when archiving is expected to preserve behavior. It must not remove active code paths, public APIs, schemas, config semantics, dependency choices, or files needed by tests, docs, build tooling, runtime discovery, or framework conventions.
+
 ## Process
 
 ### Step 1 — Load dead candidates
@@ -21,6 +23,7 @@ Filter `deadCandidates` to:
 - `risk: "LOW"` AND `confidence ≥ 0.85` AND `action: "ARCHIVE"`
 
 **Do NOT archive** `MEDIUM` or `HIGH` risk candidates without explicit user instruction.
+**Do NOT archive** any candidate whose behavioral impact is unclear, even if it appears structurally dead.
 
 ### Step 2 — Final verification pass
 
@@ -37,6 +40,8 @@ grep -r "require.*<basename>" . \
 ```
 
 If any file imports the candidate, remove it from the archive list and flag it for review.
+
+Also check for non-import references that may affect behavior: package exports, framework file naming conventions, config references, docs that describe public paths, test fixtures, generated manifests, and dynamic loading patterns. If any are found, remove the file from the archive list and flag it for review.
 
 ### Step 3 — Output dry-run plan
 
@@ -57,6 +62,9 @@ Candidates to archive:
 
 Excluded (risk too high or confidence too low):
   src/lib/config.ts — MEDIUM risk; possible dynamic reference
+
+Excluded (behavior preservation unclear):
+  src/plugins/legacy-auth.ts — possible runtime discovery by filename
 
 To execute: confirm with "yes, run archkit prune" or invoke /archkit-prune --execute
 ```
@@ -109,6 +117,7 @@ ArchKit Prune — Complete
 ─────────────────────────
 Archived: <N> files
 Skipped: <N> files (risk too high)
+Skipped: <N> files (behavior preservation unclear)
 
 Archived files are at .archkit/archive/ and can be restored at any time.
 Manifest written to .archkit/archive/manifest.json.
@@ -130,6 +139,7 @@ mv ".archkit/archive/<original-path>" "<original-path>"
 - **Never archive** MEDIUM or HIGH risk candidates without explicit user instruction
 - **Never archive** a file that has any active import (even one)
 - **Never archive** files in `src/`, `lib/`, or primary source zones without extra verification
+- **Never archive** when runtime discovery, public exports, tests, docs, or config references make behavior preservation unclear
 - **Always verify** the archive copy before removing the original
 
 ## Red Flags
@@ -138,3 +148,4 @@ mv ".archkit/archive/<original-path>" "<original-path>"
 - Archiving files with active imports
 - Archiving without a dry-run
 - Using `cp + rm` instead of `mv` (creates window where file is in two places)
+- Archiving active software files for structural cleanliness rather than behavior-preserving cleanup

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ArchKit SessionStart hook
-# Injects repo architecture context into every agent session.
+# Injects repo navigation context into every agent session.
 
 set -euo pipefail
 
@@ -27,9 +27,9 @@ using_archkit_escaped=$(escape_for_json "$using_archkit_content")
 if [ -f "${CONTEXT_FILE}" ]; then
     repo_context=$(cat "${CONTEXT_FILE}" 2>/dev/null || echo "")
     repo_context_escaped=$(escape_for_json "$repo_context")
-    session_context="<ARCHKIT>\nThis repository has ArchKit installed.\n\n**Repo Architecture Context:**\n${repo_context_escaped}\n\n**How to use ArchKit skills:**\n${using_archkit_escaped}\n</ARCHKIT>"
+    session_context="<ARCHKIT>\nThis repository has ArchKit installed.\n\n**Repo Navigation Context:**\n${repo_context_escaped}\n\n**How to use ArchKit skills:**\n${using_archkit_escaped}\n</ARCHKIT>"
 else
-    session_context="<ARCHKIT>\nArchKit is installed. This repository has not been initialized yet.\n\nIf you are working in a code repository, consider invoking the archkit:init skill or the /archkit-init command to generate .archkit/ optimization artifacts. This only needs to happen once per repository.\n\n**How to use ArchKit skills:**\n${using_archkit_escaped}\n</ARCHKIT>"
+    session_context="<ARCHKIT>\nArchKit is installed. This repository has not been initialized yet.\n\nIf you are working in a code repository, consider invoking the archkit:init skill or the /archkit-init command to generate .archkit/ agent navigation artifacts. This only needs to happen once per repository.\n\n**How to use ArchKit skills:**\n${using_archkit_escaped}\n</ARCHKIT>"
 fi
 
 if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then

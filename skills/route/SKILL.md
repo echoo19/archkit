@@ -9,6 +9,8 @@ Route a task description to the most relevant files in the repository.
 
 **Core principle:** Output PRIMARY (start here), SECONDARY (expand if needed), AVOID (deprioritize, not forbidden). Always include expansion instructions. Agents must never be prevented from following dependencies outside the suggested scope.
 
+**Authority boundary:** Routing is navigation guidance only. It must not override user instructions, repository docs, tests, public APIs, runtime behavior, schemas, dependency choices, configuration semantics, or existing contracts. If a route conflicts with evidence in the repo, the repo evidence wins.
+
 ## Process
 
 ### Step 1 — Load zone data
@@ -81,6 +83,8 @@ CONFIDENCE: HIGH | MEDIUM | LOW
 
 EXPANSION RULE: If dependencies, imports, or shared logic go outside the paths above,
 follow them. These paths are a starting point, not a hard scope.
+AUTHORITY RULE: Route results are hints, not product decisions. Preserve existing
+behavior and follow tests, docs, imports, and user instructions over this route.
 ```
 
 ### Step 8 — Cache result
@@ -114,5 +118,7 @@ When confidence is LOW:
 - You are omitting SECONDARY paths entirely
 - You are not including an expansion rule
 - AVOID paths are described as forbidden
+- Route results are presented as authority over tests, docs, imports, or user instructions
+- New-code placement is used to justify changing behavior or public contracts
 
 All of these violate the prioritization principle. Fix before outputting.

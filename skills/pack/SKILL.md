@@ -9,6 +9,8 @@ Regenerate the agent-facing artifacts: `agent-context.md` and `subagent-template
 
 **Core principle:** Pack is what converts raw artifacts into agent-optimized context. Run it after any structural change to keep future sessions accurate.
 
+**Authority boundary:** Packed context is agent navigation metadata, not product authority. It must explicitly tell future agents to preserve behavior and to follow user instructions, tests, docs, imports, public APIs, schemas, dependency choices, configuration semantics, and existing contracts over ArchKit suggestions.
+
 ## When to Run
 
 - After `archkit:fix` moves files
@@ -79,6 +81,12 @@ Route results are starting points. Always expand scope when:
 - A dependency goes outside the suggested zone
 - Shared logic appears in another zone
 - Multiple candidate files exist
+
+## Authority Boundary
+ArchKit guidance is not product authority.
+Preserve existing behavior unless the user explicitly requests behavior change.
+User instructions, tests, docs, imports, public APIs, schemas, dependency choices, configuration semantics, and existing contracts override ArchKit suggestions.
+ArchKit may touch software files only for behavior-preserving structure/navigation work with high confidence and verification.
 ```
 
 ### Step 3 — Regenerate subagent-template.md
@@ -110,6 +118,8 @@ You are working in a {{REPO_TYPE}} repository ({{FRAMEWORK}}).
 {{NEW_CODE_PLACEMENT}} — file pattern: {{FILE_PATTERN}}
 
 **Expansion rule:** If imports, dependencies, or shared logic exist outside the paths above, follow them. Do not stay restricted to primary paths if the task requires broader access.
+
+**Authority rule:** ArchKit hints do not override user instructions, tests, docs, public APIs, runtime behavior, schemas, dependency choices, configuration semantics, or existing contracts. Touch software files only when the change is behavior-preserving and verified.
 
 **Safety:** Do not edit files in dist/, build/, or .archkit/archive/.
 ---

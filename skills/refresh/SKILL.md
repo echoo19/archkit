@@ -9,6 +9,8 @@ Rescan the repository and update all `.archkit/` artifacts to reflect the curren
 
 **Core principle:** Refresh is a lightweight re-init that preserves existing configuration while updating stale data. It does not overwrite manually edited canon.json zone definitions unless the directory structure has materially changed.
 
+**Authority boundary:** Refresh updates agent navigation metadata only. It must not change product behavior, public APIs, schemas, dependency choices, configuration semantics, or code files. Regenerated context must preserve the ArchKit authority boundary.
+
 ## When to Run
 
 - After adding or removing major directories

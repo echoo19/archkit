@@ -1,6 +1,6 @@
 ---
 name: using-archkit
-description: Use at the start of any session in a code repository to understand how ArchKit optimizes agent navigation, routing, and structural decisions
+description: Use at the start of any session in a code repository to understand how ArchKit optimizes agent navigation, routing, and behavior-preserving structural guidance
 ---
 
 <SUBAGENT-STOP>
@@ -12,6 +12,8 @@ If you were dispatched as a subagent for a specific implementation task, skip th
 ArchKit is a repository optimization layer. It improves how you navigate, route, and edit inside a codebase by maintaining machine-readable architecture artifacts in `.archkit/`.
 
 **Core principle:** ArchKit is a prioritization system, not a restriction system. It tells you where to START, not where you MUST stay.
+
+**Authority boundary:** ArchKit is agent navigation metadata, not product authority. User instructions, repository docs, tests, public APIs, runtime behavior, data schemas, dependency choices, configuration semantics, and maintainer decisions take precedence over ArchKit guidance.
 
 ## Skill Map
 
@@ -45,6 +47,9 @@ ArchKit is a repository optimization layer. It improves how you navigate, route,
 - Route results are **suggestions**, not hard limits
 - `AVOID` paths are deprioritized, not forbidden
 - Always expand scope when dependencies or shared logic require it
+- Touch software files only for behavior-preserving structure/navigation work
+- Never intentionally change functionality to satisfy ArchKit structure
+- Treat uncertain findings as review candidates, not action items
 - Never archive or move files without confirming with the user first
 - `archkit:fix` and `archkit:prune` run in **dry-run mode by default**
 

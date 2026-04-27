@@ -5,9 +5,11 @@ description: Use when .archkit/ does not exist in the repo root, or when the use
 
 # ArchKit Init
 
-Scan the repository, infer its architecture, and write `.archkit/` optimization artifacts that all other ArchKit skills depend on.
+Scan the repository, infer its architecture, and write `.archkit/` agent navigation artifacts that all other ArchKit skills depend on.
 
 **Core principle:** You are the agent doing this work using your own tools (Bash, Read, Write). No external binary is required.
+
+**Authority boundary:** Generated artifacts are agent navigation metadata, not product authority. They must tell future agents to preserve runtime behavior and to follow user instructions, tests, docs, imports, public APIs, schemas, dependency choices, configuration semantics, and existing contracts over ArchKit guidance.
 
 ## Process
 
@@ -96,7 +98,7 @@ Create the directory and write all files:
 mkdir -p .archkit
 ```
 
-**canon.json** — architecture contract:
+**canon.json** — architecture guidance:
 ```json
 {
   "version": "1.0.0",
@@ -224,6 +226,8 @@ Repo: <name from package.json / directory name>
 ## Routing Notes
 Always expand scope when dependencies go outside the suggested zone.
 Route results are starting points, not hard limits.
+ArchKit guidance is not product authority. Preserve existing behavior and follow user instructions, tests, docs, imports, public APIs, schemas, dependency choices, configuration semantics, and maintainer decisions over ArchKit suggestions.
+ArchKit may touch software files only for behavior-preserving structure/navigation work with high confidence and verification.
 ```
 
 ### Step 9 — Generate subagent-template.md
@@ -253,6 +257,8 @@ You are working in a {{REPO_TYPE}} repository.
 {{NEW_CODE_PLACEMENT}}
 
 **Expansion rule:** If imports, dependencies, or shared logic go outside the paths above, follow them. Do not stay restricted to primary paths if the task requires broader access.
+
+**Authority rule:** ArchKit hints do not override user instructions, tests, docs, public APIs, runtime behavior, schemas, dependency choices, configuration semantics, or existing contracts. Touch software files only when the change is behavior-preserving and verified.
 ---
 ```
 

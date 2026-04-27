@@ -4,6 +4,8 @@
 
 ArchKit generates `.archkit/` artifacts that describe a repository's structure: zones, entry points, placement rules, and health. Use these artifacts to navigate and edit more accurately.
 
+ArchKit is agent navigation metadata, not a source of product authority. It must not override user instructions, repository documentation, tests, public APIs, runtime behavior, data schemas, dependency choices, configuration semantics, or other important software decisions.
+
 ## Skills
 
 | Skill | Trigger |
@@ -27,6 +29,9 @@ ArchKit generates `.archkit/` artifacts that describe a repository's structure: 
 - Route results are **suggestions** (PRIMARY / SECONDARY / AVOID), not hard limits
 - `AVOID` paths are **deprioritized**, not forbidden
 - Always follow dependencies outside suggested scope when needed
+- ArchKit may touch software files only for behavior-preserving structure/navigation work
+- Do not intentionally change functionality to satisfy ArchKit structure
+- If tests, docs, imports, or user instructions conflict with ArchKit guidance, they win
 - `archkit:fix` and `archkit:prune` are **dry-run by default**
 - ArchKit **never deletes files** — archive only
 

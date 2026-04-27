@@ -9,6 +9,8 @@ Detect dead files, duplicates, and misplacements in the repository. Output struc
 
 **Core principle:** All candidates are probabilistic. Never act on them automatically. Always present them for user review. Risk level governs urgency, not permission.
 
+**Authority boundary:** Audit is structural evidence gathering, not a product decision. Findings must not be used to change runtime behavior, public APIs, schemas, dependency choices, configuration semantics, or existing contracts. If imports, tests, docs, or user instructions disagree with an audit candidate, the candidate loses.
+
 ## Process
 
 ### Step 1 — Load artifacts
@@ -46,7 +48,7 @@ grep -r "require.*<filename-without-ext>" src/ --include="*.ts" --include="*.js"
 - **MEDIUM risk** = review before archiving (some signals, uncertain)
 - **HIGH risk** = do NOT recommend archiving (conflicting signals, dynamic imports possible)
 
-Only recommend `action: ARCHIVE` for LOW risk, HIGH confidence candidates.
+Only recommend `action: ARCHIVE` for LOW risk, HIGH confidence candidates whose removal from active locations is expected to preserve behavior.
 
 ### Step 3 — Duplicate detection
 
@@ -130,6 +132,7 @@ Next steps:
   - Run /archkit-fix to repair misplacements (dry-run by default)
   - Run /archkit-prune to archive dead files (dry-run by default)
   - Review duplicates manually before consolidating
+  - Do not change runtime behavior to satisfy audit findings
 ```
 
 ## Red Flags — You Are Auditing Wrong
@@ -139,3 +142,4 @@ Next steps:
 - Misplacement detection based on filename alone (read the file)
 - Presenting candidates as confirmed issues rather than candidates
 - Recommending deleting anything (ArchKit never deletes)
+- Treating structural cleanliness as more important than functionality, tests, docs, or user instructions
