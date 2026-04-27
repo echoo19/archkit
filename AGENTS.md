@@ -26,6 +26,7 @@ ArchKit is agent navigation metadata, not a source of product authority. It must
 
 ## Core Rules
 
+- If `.archkit/` doesn't exist, invoke `archkit:init` before starting any non-trivial task
 - Route results are **suggestions** (PRIMARY / SECONDARY / AVOID), not hard limits
 - `AVOID` paths are **deprioritized**, not forbidden
 - Always follow dependencies outside suggested scope when needed

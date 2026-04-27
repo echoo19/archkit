@@ -22,6 +22,7 @@ activate_skill archkit:refresh    # Rescan repo and update artifacts
 
 ## Behavior Rules
 
+- If `.archkit/` doesn't exist, run `archkit:init` before starting any non-trivial task
 - Invoke `archkit:route` before choosing files for any non-trivial task
 - Route results are starting points — always expand when dependencies require it
 - `AVOID` paths are deprioritized, not forbidden

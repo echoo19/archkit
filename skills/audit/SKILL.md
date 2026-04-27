@@ -22,6 +22,29 @@ cat .archkit/map.json
 
 If `.archkit/` doesn't exist, run `archkit:init` first.
 
+### Step 1.5 — Load exemptions
+
+Before scanning, establish what is exempt from all dead-file detection.
+
+**Allowlist:** If `.archkit/keep.json` exists, every file listed there is unconditionally exempt from dead, duplicate, and misplacement detection. Do not flag it, mention it, or include it in any candidate list.
+
+```bash
+cat .archkit/keep.json 2>/dev/null || echo "[]"
+```
+
+`keep.json` format — a flat array of repo-relative paths:
+```json
+["src/legacy/compat.ts", "scripts/migrate.js"]
+```
+
+**Package entry points:** Files referenced in `package.json` `main`, `exports`, or `bin` fields are exempt from the zero-inbound-imports signal. They are boundaries, not dead code.
+
+```bash
+cat package.json | grep -E '"main"|"exports"|"bin"' 2>/dev/null
+```
+
+**Dynamic import risk:** Files in directories that suggest dynamic loading (`plugins/`, `handlers/`, `loaders/`, `routes/`, `adapters/`) must be set to at least MEDIUM risk regardless of other signals, because their callers may not appear in static import scans.
+
 ### Step 2 — Dead file detection
 
 A file is a **dead candidate** if it meets multiple of these criteria:
@@ -138,6 +161,9 @@ Next steps:
 ## Red Flags — You Are Auditing Wrong
 
 - Recommending ARCHIVE for HIGH-risk candidates
+- Flagging files listed in `.archkit/keep.json` — they are unconditionally exempt
+- Flagging `package.json` entry points (`main`, `exports`, `bin`) as dead based on zero imports
+- Flagging files in dynamic-loading directories (`plugins/`, `loaders/`, `handlers/`) as LOW risk
 - Flagging files without checking for inbound imports
 - Misplacement detection based on filename alone (read the file)
 - Presenting candidates as confirmed issues rather than candidates

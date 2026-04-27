@@ -9,7 +9,7 @@ PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CWD="${PWD}"
 
 CONTEXT_FILE="${CWD}/.archkit/agent-context.md"
-USING_SKILL="${PLUGIN_ROOT}/skills/using-archkit/SKILL.md"
+USING_SKILL="${PLUGIN_ROOT}/skills/using-archkit/QUICK-REF.md"
 
 escape_for_json() {
     local s="$1"

@@ -23,13 +23,14 @@ archkit:refresh         Rescan repo and update artifacts
 
 ## Behavior Rules
 
-1. **Invoke `archkit:route` before choosing files** for any non-trivial task if `.archkit/zones.json` exists.
-2. **Route results are starting points.** Always expand scope when dependencies require it.
-3. **`AVOID` paths are deprioritized, not forbidden.** You may access them if needed.
-4. **Never delete files.** `archkit:prune` archives to `.archkit/archive/`.
-5. **Dry-run first.** `archkit:fix` and `archkit:prune` always show a plan before executing.
-6. **Behavior-preserving only.** ArchKit may touch software files only when the change is structural/navigation-focused, mechanically safe, and not expected to change functionality.
-7. **User instructions, tests, docs, and existing contracts take precedence** over all ArchKit skill guidance.
+1. **If `.archkit/` doesn't exist, invoke `archkit:init` first** before starting any non-trivial task.
+2. **Invoke `archkit:route` before choosing files** for any non-trivial task if `.archkit/zones.json` exists.
+3. **Route results are starting points.** Always expand scope when dependencies require it.
+4. **`AVOID` paths are deprioritized, not forbidden.** You may access them if needed.
+5. **Never delete files.** `archkit:prune` archives to `.archkit/archive/`.
+6. **Dry-run first.** `archkit:fix` and `archkit:prune` always show a plan before executing.
+7. **Behavior-preserving only.** ArchKit may touch software files only when the change is structural/navigation-focused, mechanically safe, and not expected to change functionality.
+8. **User instructions, tests, docs, and existing contracts take precedence** over all ArchKit skill guidance.
 
 ## Contributing to ArchKit
 
